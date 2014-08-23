@@ -8,7 +8,7 @@ namespace OgreUtility
 	// raycast from a point in to the scene.
 	// returns success or failure.
 	// on success the point is returned in the result.
-	bool RaycastFromPoint(Ogre::RaySceneQuery* raySceneQuery, const Ogre::Ray& ray, Ogre::Vector3 &result);
+	bool polygonRaycast(Ogre::RaySceneQuery* raySceneQuery, const Ogre::Ray& ray, Ogre::SceneNode*& node_result, Ogre::Vector3& point_result);
 
 	// Get the mesh information for the given entity.
 	void GetMeshInformation(const Ogre::Entity* entity, size_t& vertex_count, Ogre::Vector3*& vertices, size_t& index_count, unsigned long*& indices, const Ogre::Vector3& position, const Ogre::Quaternion& orient, const Ogre::Vector3& scale);

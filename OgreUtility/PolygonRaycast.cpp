@@ -6,7 +6,7 @@ namespace OgreUtility
 	//
 	// RaycastFromPoint
 	//
-	bool RaycastFromPoint(Ogre::RaySceneQuery* raySceneQuery, const Ogre::Ray& ray, Ogre::Vector3 &result)
+	bool polygonRaycast(Ogre::RaySceneQuery* raySceneQuery, const Ogre::Ray& ray, Ogre::SceneNode*& node_result, Ogre::Vector3& point_result)
 	{
 		if (!raySceneQuery)
 			return false;
@@ -25,7 +25,8 @@ namespace OgreUtility
 		// check all of the objects most of the time, but the worst case scenario is that
 		// we need to test every triangle of every object.
 		Ogre::Real closest_distance = -1.0f;
-		Ogre::Vector3 closest_result;
+		Ogre::Vector3 closest_result_point;
+		Ogre::SceneNode* closest_result_node = nullptr;
 		Ogre::RaySceneQueryResult& query_result = raySceneQuery->getLastResults();
 		for (size_t qr_idx = 0, size = query_result.size(); qr_idx < size; ++qr_idx)
 		{
@@ -91,14 +92,18 @@ namespace OgreUtility
 				// if we found a new closest raycast for this object, update the
 				// closest_result before moving on to the next object.
 				if (new_closest_found)
-					closest_result = ray.getPoint(closest_distance);
+				{
+					closest_result_point = ray.getPoint(closest_distance);
+					closest_result_node = query_result[qr_idx].movable->getParentSceneNode();
+				}
 			}
 		}
 
 		// return the result
 		if (closest_distance >= 0.0f){
 			// raycast success
-			result = closest_result;
+			point_result = closest_result_point;
+			node_result = closest_result_node;
 			return true;
 		}
 		// raycast failed
